@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -v -E \"^.{0,2}$\")",
+      "Bash(python -c ' *)",
+      "Bash(grep -v -E \"^[0-9]+ .{0,3}$\")"
+    ]
+  }
+}
