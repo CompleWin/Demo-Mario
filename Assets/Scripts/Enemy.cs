@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
         {
             ChangeDirection(true);
         }
+        rigidbody2d.velocity = new Vector2(direction.x * speed, rigidbody2d.velocity.y);
     }
 
     private void Update()
