@@ -10,9 +10,14 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float speedCoefficient;
-    [SerializeField] private float jumpForce;
+
+    [SerializeField] private float jumpHeight = 3.5f;
+    [SerializeField] private float timeToApex = 0.4f;
+    private float jumpVelocity;
+    
     private Vector2 velocity;
     private bool isGrounded;
+    private bool groundContact;
     private float xMax;
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
@@ -30,11 +35,20 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         
         xMax = Camera.main.orthographicSize * Camera.main.aspect;
+        
+        // g = 2h / t^2
+        float gravity = 2f * jumpHeight / (timeToApex * timeToApex);
+        // v_0 = g * t
+        jumpVelocity = gravity * timeToApex;
+        rigidbody2d.gravityScale = gravity / -Physics2D.gravity.y;
     }
 
     private void FixedUpdate()
     {
-        float inputAxis = Input.GetAxis("Horizontal");
+        isGrounded = groundContact;
+        groundContact = false;
+        
+        float inputAxis = Input.GetAxisRaw("Horizontal");
         velocity = rigidbody2d.velocity;
 
         if (inputAxis < 0)
@@ -84,25 +98,26 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (!isGrounded && collision.gameObject.CompareTag("Ground"))
+        if (!collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = collision.contacts.All(c => c.point.y < transform.position.y);
+            return;
         }
-    }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
+        for (int i = 0; i < collision.contactCount; i++)
         {
-            isGrounded = !collision.contacts.All(c => c.point.y > transform.position.y);
+            if (collision.GetContact(i).normal.y > 0.5f)
+            {
+                groundContact = true;
+                return;
+            }
         }
     }
 
     private void Jump()
     {
-        rigidbody2d.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpVelocity);
     }
 
     public void AddCoin(int count)

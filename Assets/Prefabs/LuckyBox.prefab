@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6305869440461275167}
   m_Layer: 0
   m_Name: LuckyBox
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,3 +128,4 @@ MonoBehaviour:
   itemPrefab: {fileID: 3970957422275729390, guid: 0c3556345ff17f446a7fda86d992a3b9, type: 3}
   itemOffset: {x: 0, y: 1.25, z: 0}
   centerTolerance: 0.25
+  itemRiseDuration: 0.5
