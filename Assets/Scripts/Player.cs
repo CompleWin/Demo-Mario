@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float timeToApex = 0.4f;
     private float jumpVelocity;
     
+    [SerializeField] private AudioClip jumpSound;
+    
     private Vector2 velocity;
     private bool isGrounded;
     private bool groundContact;
@@ -22,6 +24,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+    private AudioSource audioSource;
     
     [SerializeField] private Text scoreText;
     private int score;
@@ -33,6 +36,7 @@ public class Player : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         
         xMax = Camera.main.orthographicSize * Camera.main.aspect;
         
@@ -118,6 +122,7 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpVelocity);
+        audioSource.PlayOneShot(jumpSound);
     }
 
     public void AddCoin(int count)

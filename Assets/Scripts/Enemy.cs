@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private AudioClip deathSound;
     private Rigidbody2D rigidbody2d;
     private Vector2 direction = Vector2.left;
 
@@ -53,7 +54,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                SceneManager.LoadScene(0);
+                StartCoroutine(Death(collision.gameObject));
             }
         }
         else
@@ -71,5 +72,16 @@ public class Enemy : MonoBehaviour
             velocity.x = direction.x * speed;
             rigidbody2d.velocity = velocity;
         }
+    }
+    
+    private IEnumerator Death(GameObject playerObject)
+    {
+        var audioSource = playerObject.GetComponent<AudioSource>();
+
+        audioSource.PlayOneShot(deathSound);
+
+        yield return new WaitForSeconds(deathSound.length);
+
+        SceneManager.LoadScene(0);
     }
 }
